@@ -36,9 +36,7 @@ libraries and taking their complexities into account.
 
 <a href="https://lisanjs.com/img/with-interpolation.png" target="_blank"><img src="https://lisanjs.com/img/with-interpolation.png"></a>
 
-<p align="center" style="font-size: 10px">
-on MacBook Pro 2017, 2,8 GHz Quad-Core Intel Core i7 16 GB 2133 MHz LPDDR3
-<p>
+<p align="center" style="font-size: 10px">on MacBook Pro 2017, 2,8 GHz Quad-Core Intel Core i7 16 GB 2133 MHz LPDDR3<p>
 
 > As you can predict, Lisan gets **exponentially** faster if
 > number of placeholders and localization functions increase.
@@ -50,9 +48,7 @@ Because it does not perform placeholder search.
 
 <a href="https://lisanjs.com/img/no-interpolation.png" target="_blank"><img src="https://lisanjs.com/img/no-interpolation.png"></a>
 
-<p align="center" style="font-size: 10px">
-on MacBook Pro 2017, 2,8 GHz Quad-Core Intel Core i7 16 GB 2133 MHz LPDDR3
-<p>
+<p align="center" style="font-size: 10px">on MacBook Pro 2017, 2,8 GHz Quad-Core Intel Core i7 16 GB 2133 MHz LPDDR3<p>
 
 ## Setup
 
@@ -67,6 +63,7 @@ After starting the server, you can visit:
 
 - http://localhost:8080/tests/with-interpolation.html
 - http://localhost:8080/tests/no-interpolation.html
+- http://localhost:8080/tests/time-to-interact.html
 
 Please check the **developer console** for the results!
 
