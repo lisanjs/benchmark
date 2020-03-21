@@ -14,7 +14,7 @@
     <script src="../node_modules/lisan-plugin-loader/dist/index.umd.js"></script>
     <script>
       function loadJSON() {
-        return fetch("/benchmark/example.json").then(response => {
+        return fetch("/tests/example.json").then(response => {
           return response.text();
         });
       }
