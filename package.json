@@ -1,0 +1,25 @@
+{
+  "name": "benchmark",
+  "version": "1.0.0",
+  "description": "A benchmark test with Lisan",
+  "main": "example.js",
+  "scripts": {
+    "start": "http-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lisanjs/benchmark.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lisanjs/benchmark/issues"
+  },
+  "homepage": "https://github.com/lisanjs/benchmark#readme",
+  "dependencies": {
+    "http-server": "^0.12.1",
+    "lisan": "0.0.34-alpha.0",
+    "lisan-plugin-loader": "0.0.34-alpha.0"
+  }
+}

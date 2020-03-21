@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Check developer console window</p>
+    <script src="https://unpkg.com/lodash@4.17.15/lodash.js"></script>
+    <script src="https://unpkg.com/platform@1.3.5/platform.js"></script>
+    <script src="https://unpkg.com/benchmark@2.1.4/benchmark.js"></script>
+    <script src="../node_modules/lisan/dist/index.umd.js"></script>
+    <script>
+      function loadJSON() {
+        return fetch("/benchmark/example.json").then(response => {
+          return response.text();
+        });
+      }
+
+      const tests = t => {
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+        t("key.with.no.placeholder");
+      };
+
+      (async () => {
+        const regexKeys = {
+          entries: {
+            "key.with.no.placeholder":
+              "Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed"
+          }
+        };
+
+        const tRegex = (key, placeholders = {}) => {
+          // finding translation template for given key.
+          let str = regexKeys.entries[key];
+
+          // we are iterating placeholders if it was provided
+          for (let placeholder in placeholders) {
+            // Finding & Replacing *all* placeholders with their values
+            // Notice, using regex on runtime consumes huge resource
+            str = str.replace(
+              new RegExp("\\$\{" + placeholder + "\}", "g"),
+              placeholders[placeholder]
+            );
+          }
+          return str;
+        };
+
+        const { lisan, t } = window.lisanJS;
+
+        lisan.add(regexKeys);
+
+        var suite = new Benchmark.Suite();
+        // add tests
+        suite
+          .add("RegExp", function() {
+            tests(tRegex);
+          })
+          .add("lisan", function() {
+            tests(t);
+          })
+          // add listeners
+          .on("cycle", function(event) {
+            console.log(String(event.target));
+          })
+          .on("complete", function() {
+            console.log("Fastest is " + this.filter("fastest").map("name"));
+          })
+          // run async
+          .run({ async: true });
+
+        return "done";
+      })().then(result => console.log("result", result));
+    </script>
+  </body>
+</html>
