@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Check developer console window</p>
+    <hr />
+    <p>
+      This tests checks how much time needed to load a lisan module (javascript
+      file), compared to loading a JSON file.
+    </p>
+    <script src="../node_modules/lisan/dist/index.umd.js"></script>
+    <script src="../node_modules/lisan-plugin-loader/dist/index.umd.js"></script>
+    <script>
+      function loadJSON() {
+        return fetch("/tests/example.json").then(response => {
+          return response.text();
+        });
+      }
+
+      (async () => {
+        console.time("Loading JSON");
+        const jsonStr = await loadJSON();
+        const regexKeys = JSON.parse(jsonStr);
+        console.timeEnd("Loading JSON");
+
+        const { lisan, t } = window.lisanJS;
+        const { Loader } = window.lisanPluginLoader;
+
+        lisan.use(
+          Loader({
+            dictionaryUrlFn: dictionaryName => `/tests/${dictionaryName}.js`
+          })
+        );
+
+        console.time("Loading Lisan Module");
+        await lisan.load("example");
+        console.timeEnd("Loading Lisan Module");
+
+        return "done";
+      })().then(result => console.log("result", result));
+    </script>
+  </body>
+</html>
