@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Check developer console window</p>
+    <hr />
+    <p>
+      This tests compares lisan vs regex approach when interpolating string
+    </p>
+    <script src="https://unpkg.com/lodash@4.17.15/lodash.js"></script>
+    <script src="https://unpkg.com/platform@1.3.5/platform.js"></script>
+    <script src="https://unpkg.com/benchmark@2.1.4/benchmark.js"></script>
+    <script src="../node_modules/lisan/dist/index.umd.js"></script>
+    <script src="../node_modules/lisan-plugin-loader/dist/index.umd.js"></script>
+    <script>
+      function loadJSON() {
+        return fetch("/tests/example.json").then(response => {
+          return response.text();
+        });
+      }
+
+      const tests = t => {
+        t("key.with.no.placeholder");
+        t("key.with.a.name.placeholder", { name: "John" });
+        t("key.date.time", {
+          day: "Monday",
+          time: "12:32",
+          another: "another text"
+        });
+
+        t("complex", {
+          val1: "6:20 PM",
+          val2: "Lorem ipsum dolor sit amed",
+          val3:
+            "Big black hawk down in the dark night during black attack with with a hawk missile",
+          val4:
+            "somehow I got big chunk data and wanna test with that translate method what will be happen during test we will see. good to know to test with this data will work also durin schema creation method",
+          val5: "324763278647823.23424234",
+          val6:
+            "6:20 PM Lorem ipsum dolor sit amed. Lorem ipsum dolor sit amed",
+          val7:
+            "Lorem ipsum dolor sit amed. Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed",
+          val8:
+            "Big black hawk down in the dark night during black attack with with a hawk missile.... Lorem ipsum dolor sit amed Lorem ipsum dolor sit amed ",
+          val9:
+            "somehow I got big chunk data and wanna test with that Lorem ipsum dolor sit amedtranslate method what will be happen Lorem ipsum dolor sit amed during test we will see. good to know to test Lorem ipsum dolor sit amedwith this data will work also durin schema creation method",
+          val10: "3247632786478ssssss23.23424234"
+        });
+      };
+
+      (async () => {
+        const tRegex = (regexKeys, key, placeholders = {}) => {
+          // finding translation template for given key.
+          let str = regexKeys.entries[key];
+
+          // we are iterating placeholders if it was provided
+          for (let placeholder in placeholders) {
+            // Finding & Replacing *all* placeholders with their values
+            // Notice, using regex on runtime consumes huge resource
+            str = str.replace(
+              new RegExp("\\$\{" + placeholder + "\}", "g"),
+              placeholders[placeholder]
+            );
+          }
+          return str;
+        };
+
+        const { lisan, t } = window.lisanJS;
+        const { Loader } = window.lisanPluginLoader;
+
+        lisan.use(
+          Loader({
+            dictionaryUrlFn: dictionaryName => `/tests/${dictionaryName}.js`
+          })
+        );
+
+        var suite = new Benchmark.Suite();
+        // add tests
+        suite
+          .add("RegExp", {
+            defer: true,
+            fn: function(deferred) {
+              loadJSON().then(jsonStr => {
+                const regexKeys = JSON.parse(jsonStr);
+                tests(tRegex.bind(null, regexKeys));
+                deferred.resolve();
+              });
+            }
+          })
+          .add("lisan", {
+            defer: true,
+            fn: function(deferred) {
+              lisan.load("example").then(() => {
+                tests(t);
+                deferred.resolve();
+              });
+            }
+          })
+          // add listeners
+          .on("cycle", function(event) {
+            console.log(String(event.target));
+          })
+          .on("complete", function() {
+            console.log("Fastest is " + this.filter("fastest").map("name"));
+          })
+          // run async
+          .run({ async: true });
+
+        return "started";
+      })().then(result => console.log("result", result));
+    </script>
+  </body>
+</html>
