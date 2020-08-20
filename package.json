@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/lisanjs/benchmark#readme",
   "dependencies": {
-    "http-server": "^0.12.1",
-    "lisan": "0.0.34-alpha.0",
-    "lisan-plugin-loader": "0.0.34-alpha.0"
+    "http-server": "^0.12.3",
+    "lisan": "0.1.1",
+    "lisan-plugin-loader": "0.1.1"
   }
 }
